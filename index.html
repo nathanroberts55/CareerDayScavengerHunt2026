@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCAVENGER HUNT :: Terminal Access System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* CRT Scanline Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    rgba(0, 255, 0, 0.03),
+                    rgba(0, 255, 0, 0.03) 1px,
+                    transparent 1px,
+                    transparent 2px);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Terminal Container */
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            border: 3px solid #0f0;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 100;
+        }
+
+        .terminal-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #0f0;
+            padding-bottom: 15px;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .terminal-header::before {
+            content: '> ';
+            color: #0f0;
+        }
+
+        .terminal-header::after {
+            content: ' <';
+            color: #0f0;
+        }
+
+        /* Landing Page */
+        .landing-page {
+            text-align: center;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .landing-page h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .system-status {
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: rgba(0, 255, 0, 0.05);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .status-line {
+            margin: 8px 0;
+        }
+
+        .status-line::before {
+            content: '[ ✓ ] ';
+            color: #0f0;
+            font-weight: bold;
+        }
+
+        .instructions {
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: rgba(0, 255, 0, 0.05);
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .instructions-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+        }
+
+        .instruction-item {
+            margin: 10px 0;
+        }
+
+        .instruction-item::before {
+            content: '▶ ';
+            color: #0f0;
+            margin-right: 8px;
+        }
+
+        .qr-instruction {
+            font-size: 20px;
+            margin-top: 30px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Station Page */
+        .station-page {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .station-id {
+            text-align: right;
+            font-size: 12px;
+            color: #0f0;
+            opacity: 0.7;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .station-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .question-box {
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: rgba(0, 255, 0, 0.05);
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+
+        .question-context {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            color: #0f0;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+        }
+
+        .input-group {
+            margin: 25px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            background-color: #000;
+            border: 2px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), inset 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        input[type="text"]::placeholder {
+            color: #0f0;
+            opacity: 0.5;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 140px;
+            padding: 15px 20px;
+            background-color: #000;
+            border: 2px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn {
+            background-color: #000;
+        }
+
+        .reset-btn {
+            background-color: #000;
+            opacity: 0.7;
+        }
+
+        .reset-btn:hover {
+            opacity: 1;
+        }
+
+        /* Padlock Container */
+        .padlock-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            height: 80px;
+        }
+
+        .padlock {
+            font-size: 60px;
+            animation: shake 0.1s infinite;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateX(-2px) rotate(-1deg);
+            }
+
+            75% {
+                transform: translateX(2px) rotate(1deg);
+            }
+        }
+
+        /* Padlock Shattering Animation */
+        .shattering {
+            animation: shatter 1.2s ease-out forwards;
+        }
+
+        @keyframes shatter {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+                filter: drop-shadow(0 0 10px #0f0);
+            }
+
+            50% {
+                transform: scale(1.1) rotate(15deg);
+                filter: drop-shadow(0 0 20px #0f0);
+            }
+
+            100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+                filter: drop-shadow(0 0 0px #0f0);
+            }
+        }
+
+        /* Shattering Particles */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .particle::before {
+            content: '✦';
+            color: #0f0;
+            font-size: 12px;
+            animation: particle-fall 1s ease-out forwards;
+        }
+
+        @keyframes particle-fall {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Success Panel */
+        .success-panel {
+            display: none;
+            border: 3px solid #0f0;
+            padding: 25px;
+            margin: 20px 0;
+            background-color: rgba(0, 255, 0, 0.1);
+            text-align: center;
+            animation: successGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes successGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(0, 255, 0, 0.6), inset 0 0 20px rgba(0, 255, 0, 0.1);
+            }
+        }
+
+        .success-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0px;
+        }
+
+        .success-title::before {
+            content: '✓ ';
+            color: #0f0;
+        }
+
+        .success-title::after {
+            content: ' ✓';
+            color: #0f0;
+        }
+
+        .next-hint {
+            font-size: 16px;
+            margin-top: 15px;
+            line-height: 1.6;
+            padding-top: 15px;
+            border-top: 2px solid #0f0;
+        }
+
+        /* Verification Panel */
+        .verification-panel {
+            display: none;
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: rgba(0, 255, 0, 0.05);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .verification-panel.hidden {
+            display: none;
+        }
+
+        .verification-title {
+            font-weight: bold;
+            color: #0f0;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .question-box.hidden {
+            display: none;
+        }
+
+        /* Verification Success Message */
+        .verification-success {
+            display: none;
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: rgba(0, 255, 0, 0.1);
+            text-align: center;
+            animation: verificationSuccessGlow 1.5s ease-in-out;
+        }
+
+        .verification-success-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0f0;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .verification-success-message {
+            font-size: 14px;
+            color: #0f0;
+            opacity: 0.8;
+        }
+
+        @keyframes verificationSuccessGlow {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+                box-shadow: 0 0 5px rgba(0, 255, 0, 0.2);
+            }
+
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 25px rgba(0, 255, 0, 0.6), inset 0 0 15px rgba(0, 255, 0, 0.2);
+            }
+
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 15px rgba(0, 255, 0, 0.4), inset 0 0 10px rgba(0, 255, 0, 0.1);
+            }
+        }
+
+        /* Error Message */
+        .error-message {
+            display: none;
+            border: 2px solid #f00;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #f00;
+            font-size: 14px;
+            text-align: center;
+            animation: errorPulse 0.5s ease-out;
+        }
+
+        @keyframes errorPulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+            }
+
+            50% {
+                opacity: 0.5;
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 25px;
+                border-width: 2px;
+            }
+
+            .terminal-header {
+                font-size: 14px;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+            }
+
+            .landing-page h1 {
+                font-size: 22px;
+            }
+
+            .station-title {
+                font-size: 20px;
+            }
+
+            .question-box {
+                padding: 15px;
+                font-size: 14px;
+                min-height: 70px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                min-width: 100%;
+                padding: 12px 15px;
+                font-size: 13px;
+            }
+
+            .padlock {
+                font-size: 50px;
+            }
+
+            .success-title {
+                font-size: 18px;
+                letter-spacing: 0.5px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 15px;
+            }
+
+            .terminal-header {
+                font-size: 12px;
+            }
+
+            .landing-page h1 {
+                font-size: 18px;
+            }
+
+            .station-title {
+                font-size: 18px;
+            }
+
+            input[type="text"] {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+
+        /* Cursor Blink */
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background-color: #0f0;
+            margin-left: 3px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="terminal-header" id="header">SCAVENGER HUNT TERMINAL</div>
+
+        <!-- Landing Page -->
+        <div id="landingPage" class="landing-page">
+            <h1>SYSTEM READY</h1>
+            <div class="system-status">
+                <div class="status-line">System Initialized</div>
+                <div class="status-line">User Role: ACTIVE</div>
+                <div class="status-line">Access Level: AUTHORIZED</div>
+            </div>
+            <div class="instructions">
+                <div class="instructions-title">MISSION BRIEFING</div>
+                <div class="instruction-item">The first QR code is in your career day gift</div>
+                <div class="instruction-item">Physical QR codes are posted at 6 hidden locations around the school</div>
+                <div class="instruction-item">Use your phone's camera app to scan each QR code</div>
+                <div class="instruction-item">Answer trivia questions to unlock next locations</div>
+                <div class="instruction-item">Each location requires the answer from the previous one</div>
+                <div class="instruction-item">Type answers exactly as shown - case doesn't matter</div>
+                <div class="instruction-item">Collect all hints to complete the hunt</div>
+            </div>
+            <div class="qr-instruction">
+                📱 SCAN A QR CODE TO PLAY
+            </div>
+        </div>
+
+        <!-- Station Page -->
+        <div id="stationPage" style="display: none;">
+            <div class="station-id" id="stationId"></div>
+            <div class="station-title" id="stationTitle"></div>
+            <div class="question-box">
+                <div class="question-context" id="questionContext"></div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+
+            <div class="verification-panel" id="verificationPanel">
+                <div class="verification-title" id="verificationTitle">SECURITY VERIFICATION REQUIRED</div>
+                <div id="verificationMessage" style="margin-bottom: 15px;"></div>
+                <div class="input-group">
+                    <label for="verificationInput">Enter Previous Station Code:</label>
+                    <input type="text" id="verificationInput" placeholder="TYPE PREVIOUS ANSWER HERE"
+                        autocomplete="off">
+                </div>
+                <button id="verifyBtn" onclick="verifyPreviousAnswer()" style="width: 100%; margin-bottom: 10px;">VERIFY
+                    ACCESS</button>
+            </div>
+
+            <div class="padlock-container" id="padlockContainer">
+                <div class="padlock" id="padlock">🔒</div>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                ❌ CONNECTION REFUSED: ACCESS DENIED
+            </div>
+
+            <div class="verification-success" id="verificationSuccess">
+                <div class="verification-success-title">✓ VERIFICATION SUCCESSFUL</div>
+                <div class="verification-success-message">Access Granted. Loading station...</div>
+            </div>
+
+            <div class="success-panel" id="successPanel">
+                <div class="success-title">ACCESS GRANTED</div>
+                <div class="next-hint" id="nextHint"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="answerInput">Enter Access Code:</label>
+                <input type="text" id="answerInput" placeholder="TYPE YOUR ANSWER HERE" autocomplete="off">
+            </div>
+
+            <div class="button-group">
+                <button id="submitBtn" onclick="checkAnswer()">Submit Answer</button>
+                <button id="resetBtn" class="reset-btn" onclick="resetStation()">Clear</button>
+            </div>
+
+            <button style="width: 100%; margin-top: 15px;" onclick="goHome()">← RETURN TO HOME</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION OBJECT - Easy to Update
+        // ==========================================
+        const CONFIG = {
+            stations: [
+                {
+                    id: 'x92b1',
+                    title: 'CEO Station',
+                    context: 'This engineer has led Microsoft since 2014 and helped the company focus on the cloud.',
+                    question: 'Who is the current CEO of Microsoft?',
+                    answerBase64: 'U2F0eWEgTmFkZWxsYQ==', // "Satya Nadella" in Base64
+                    hint: 'Access Granted. Proceed to the cafeteria lockers for the next scan.'
+                },
+                {
+                    id: 'k4m7v',
+                    title: 'Cloud Station',
+                    context: 'Microsoft runs a huge network of computers that lets people store files over the internet. Its name is also a shade of bright blue!',
+                    question: 'What is the name of Microsoft\'s cloud platform?',
+                    answerBase64: 'QXp1cmU=', // "Azure" in Base64
+                    hint: 'Access Granted. Head to the library computers for the next clue.'
+                },
+                {
+                    id: 'p2n8q',
+                    title: 'Gaming Station',
+                    context: 'In 2001, Microsoft released a powerful gaming console with a famous green-and-black logo.',
+                    question: 'What is the name of Microsoft\'s gaming system?',
+                    answerBase64: 'WEJveA==', // "Xbox" in Base64
+                    hint: 'Access Granted. Check the gym equipment room for your next mission.'
+                },
+                {
+                    id: 'j6x3l',
+                    title: 'AI Assistant Station',
+                    context: 'Microsoft has a new AI companion that helps you write, code, and create images across Windows and Office.',
+                    question: 'What is the name of Microsoft\'s AI assistant?',
+                    answerBase64: 'Q29waWxvdA==', // "Copilot" in Base64
+                    hint: 'Access Granted. The art room holds your next destination.'
+                },
+                {
+                    id: 'c9w5r',
+                    title: 'History Station',
+                    context: 'This AI assistant was named after a famous character from the Halo video games and was Microsoft\'s original helper before Copilot.',
+                    question: 'What was its name?',
+                    answerBase64: 'Q29ydGFuYQ==', // "Cortana" in Base64
+                    hint: 'Access Granted. The science lab is your next location. Final scan awaits!'
+                },
+                {
+                    id: 'f1t4s',
+                    title: 'Minecraft Station',
+                    context: 'In 2014, Microsoft bought the company that made a world-famous game made of blocks.',
+                    question: 'What is the name of this "blocky" sandbox game?',
+                    answerBase64: 'TWluZWNyYWZ0', // "Minecraft" in Base64
+                    hint: 'Access Granted. Return to home base for your final reward!'
+                }
+            ]
+        };
+
+        // ==========================================
+        // Core Application Logic
+        // ==========================================
+
+        let currentStation = null;
+        let isAnimating = false;
+        let verifiedPreviousAnswer = false;
+
+        // Initialize App
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const stationId = urlParams.get('id');
+
+            if (stationId) {
+                loadStation(stationId);
+            } else {
+                showLandingPage();
+            }
+        });
+
+        // Show Landing Page
+        function showLandingPage() {
+            document.getElementById('landingPage').style.display = 'block';
+            document.getElementById('stationPage').style.display = 'none';
+            document.getElementById('header').textContent = 'SCAVENGER HUNT TERMINAL';
+        }
+
+        // Load Station
+        function loadStation(stationId) {
+            const station = CONFIG.stations.find(s => s.id === stationId);
+
+            if (!station) {
+                showLandingPage();
+                return;
+            }
+
+            currentStation = station;
+            isAnimating = false;
+            verifiedPreviousAnswer = false;
+
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('stationPage').style.display = 'block';
+
+            // Populate station details
+            document.getElementById('stationId').textContent = `ID: ${station.id}`;
+            document.getElementById('stationTitle').textContent = station.title;
+
+            // Clear all panels
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successPanel').style.display = 'none';
+            document.getElementById('padlockContainer').style.display = 'none';
+            document.getElementById('answerInput').value = '';
+            document.getElementById('verificationInput').value = '';
+            document.querySelector('.question-box').style.display = 'none';
+            document.getElementById('answerInput').parentElement.style.display = 'none';
+            document.querySelector('.button-group').style.display = 'none';
+            document.querySelector('button[onclick="goHome()"]').style.display = 'none';
+
+            // Determine if we need verification
+            const stationIndex = CONFIG.stations.findIndex(s => s.id === stationId);
+
+            if (stationIndex === 0) {
+                // First station - no verification needed
+                showQuestionPanel();
+            } else {
+                // Not first station - show verification panel
+                showVerificationPanel();
+            }
+        }
+
+        // Show Question Panel
+        function showQuestionPanel() {
+            document.getElementById('questionContext').textContent = currentStation.context;
+            document.getElementById('questionText').textContent = '❓ ' + currentStation.question;
+            document.getElementById('verificationPanel').style.display = 'none';
+            document.querySelector('.question-box').style.display = 'block';
+            document.getElementById('answerInput').parentElement.style.display = 'block';
+            document.querySelector('.button-group').style.display = 'flex';
+            document.querySelector('button[onclick="goHome()"]').style.display = 'block';
+            document.getElementById('answerInput').focus();
+
+            // Allow Enter key to submit
+            document.getElementById('answerInput').onkeypress = (e) => {
+                if (e.key === 'Enter') checkAnswer();
+            };
+        }
+
+        // Show Verification Panel
+        function showVerificationPanel() {
+            const stationIndex = CONFIG.stations.findIndex(s => s.id === currentStation.id);
+            const previousStation = CONFIG.stations[stationIndex - 1];
+
+            document.getElementById('verificationPanel').style.display = 'block';
+            document.querySelector('.question-box').style.display = 'none';
+            document.getElementById('answerInput').parentElement.style.display = 'none';
+            document.querySelector('.button-group').style.display = 'none';
+            document.querySelector('button[onclick="goHome()"]').style.display = 'none';
+            document.getElementById('verificationMessage').textContent = `To access ${currentStation.title}, you must first provide the answer from ${previousStation.title}.`;
+            document.getElementById('verificationInput').focus();
+
+            // Allow Enter key to submit verification
+            document.getElementById('verificationInput').onkeypress = (e) => {
+                if (e.key === 'Enter') verifyPreviousAnswer();
+            };
+        }
+
+        // Verify Previous Answer
+        function verifyPreviousAnswer() {
+            if (!currentStation) return;
+
+            const stationIndex = CONFIG.stations.findIndex(s => s.id === currentStation.id);
+            const previousStation = CONFIG.stations[stationIndex - 1];
+            const userInput = document.getElementById('verificationInput').value.trim().toUpperCase();
+            const correctAnswer = atob(previousStation.answerBase64).toUpperCase();
+
+            // Debug logging
+            console.log('[VERIFICATION DEBUG]');
+            console.log('Current Station:', currentStation.title);
+            console.log('Station Index:', stationIndex);
+            console.log('Previous Station:', previousStation.title);
+            console.log('User Input:', userInput);
+            console.log('Correct Answer:', correctAnswer);
+            console.log('Match:', userInput === correctAnswer);
+
+            if (userInput === correctAnswer) {
+                // Correct - show success message then question
+                document.getElementById('verifyBtn').disabled = true;
+                document.getElementById('verificationInput').disabled = true;
+                document.getElementById('verificationSuccess').style.display = 'block';
+
+                // Wait for animation to complete, then show question
+                setTimeout(() => {
+                    verifiedPreviousAnswer = true;
+                    document.getElementById('verificationPanel').style.display = 'none';
+                    document.getElementById('verificationSuccess').style.display = 'none';
+                    showQuestionPanel();
+                }, 1500);
+            } else {
+                // Wrong - show error
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('verificationInput').value = '';
+                setTimeout(() => {
+                    document.getElementById('errorMessage').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Check Answer
+        function checkAnswer() {
+            if (!currentStation || isAnimating) return;
+
+            const userAnswer = document.getElementById('answerInput').value.trim().toUpperCase();
+            const decodedAnswer = atob(currentStation.answerBase64).toUpperCase();
+
+            if (userAnswer === decodedAnswer) {
+                // Correct Answer
+                triggerSuccessAnimation();
+            } else {
+                // Wrong Answer
+                showError();
+            }
+        }
+
+        // Show Error
+        function showError() {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('answerInput').value = '';
+
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+            }, 3000);
+        }
+
+        // Trigger Success Animation
+        function triggerSuccessAnimation() {
+            isAnimating = true;
+            document.getElementById('padlockContainer').style.display = 'flex';
+            const padlock = document.getElementById('padlock');
+
+            // Create shattering effect
+            createShatterParticles();
+
+            // Animate padlock shattering
+            padlock.classList.add('shattering');
+
+            // Wait for animation to complete, then show success
+            setTimeout(() => {
+                document.getElementById('padlockContainer').style.display = 'none';
+                revealSuccess();
+                isAnimating = false;
+            }, 1200);
+        }
+
+        // Create Shatter Particles
+        function createShatterParticles() {
+            const container = document.getElementById('padlockContainer');
+            const particleCount = 12;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = 100;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+
+                container.appendChild(particle);
+
+                // Remove particle after animation
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // Reveal Success Panel
+        function revealSuccess() {
+            document.getElementById('successPanel').style.display = 'block';
+            document.getElementById('nextHint').textContent = `→ ${currentStation.hint}`;
+            document.getElementById('answerInput').disabled = true;
+            document.getElementById('submitBtn').disabled = true;
+        }
+
+        // Reset Station
+        function resetStation() {
+            if (!currentStation) return;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+        }
+
+        // Go Home
+        function goHome() {
+            verifiedPreviousAnswer = false;
+            window.location.href = '?';
+        }
+
+        // Prevent form submission on Enter in input
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('answerInput');
+            if (input) {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        checkAnswer();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
