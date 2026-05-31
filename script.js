@@ -10,7 +10,7 @@ const CONFIG = {
 				'This engineer has led Microsoft since 2014 and helped the company focus on the cloud.',
 			question: 'Who is the current CEO of Microsoft?',
 			answerBase64: 'U2F0eWEgTmFkZWxsYQ==', // "Satya Nadella" in Base64
-			hint: 'Access Granted. Proceed to the cafeteria lockers for the next scan.',
+			hint: 'Access Granted. Find the next clue near where you have a seat after some fun on the playground.',
 		},
 		{
 			id: 'k4m7v',
@@ -19,7 +19,7 @@ const CONFIG = {
 				'Microsoft runs a huge network of computers that lets people store files over the internet. Its name is also a shade of bright blue!',
 			question: "What is the name of Microsoft's cloud platform?",
 			answerBase64: 'QXp1cmU=', // "Azure" in Base64
-			hint: 'Access Granted. Head to the library computers for the next clue.',
+			hint: 'Access Granted. The next clue can be found along the bottom of a fence where you might also find a home run ball.',
 		},
 		{
 			id: 'p2n8q',
@@ -28,7 +28,7 @@ const CONFIG = {
 				'In 2001, Microsoft released a powerful gaming console with a famous green-and-black logo.',
 			question: "What is the name of Microsoft's gaming system?",
 			answerBase64: 'WEJveA==', // "Xbox" in Base64
-			hint: 'Access Granted. Check the gym equipment room for your next mission.',
+			hint: 'Access Granted. Look high and find the next clue on a sign that tells you that you can ONLY go left in the parking lot.',
 		},
 		{
 			id: 'j6x3l',
@@ -37,7 +37,7 @@ const CONFIG = {
 				'Microsoft has a new AI companion that helps you write, code, and create images across Windows and Office.',
 			question: "What is the name of Microsoft's AI assistant?",
 			answerBase64: 'Q29waWxvdA==', // "Copilot" in Base64
-			hint: 'Access Granted. The art room holds your next destination.',
+			hint: 'Access Granted. You have chased many codes, find this next clue close to where you might also want to get a sip to drink and stay hydrated.',
 		},
 		{
 			id: 'c9w5r',
@@ -46,16 +46,16 @@ const CONFIG = {
 				"This AI assistant was named after a famous character from the Halo video games and was Microsoft's original helper before Copilot.",
 			question: 'What was its name?',
 			answerBase64: 'Q29ydGFuYQ==', // "Cortana" in Base64
-			hint: 'Access Granted. The science lab is your next location. Final scan awaits!',
+			hint: 'Access Granted. I hope you will not be late, find this last clue by door B-8',
 		},
 		{
 			id: 'f1t4s',
-			title: 'Minecraft Station',
+			title: 'Gaming Station',
 			context:
 				'In 2014, Microsoft bought the company that made a world-famous game made of blocks.',
 			question: 'What is the name of this "blocky" sandbox game?',
 			answerBase64: 'TWluZWNyYWZ0', // "Minecraft" in Base64
-			hint: 'Access Granted. Return to home base for your final reward!',
+			hint: 'Access Granted. You have solved the last puzzle! Go to the main entrance, and under the buildings numbers leave no "stone" unturned to find where the keys are hidden.',
 		},
 	],
 };
