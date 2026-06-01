@@ -145,6 +145,162 @@ body::before {
     animation: pulse 1.5s infinite;
 }
 
+/* Completion Message */
+.completion-message {
+    border: 2px solid #0f0;
+    padding: 25px;
+    margin: 20px 0;
+    background-color: rgba(0, 255, 0, 0.05);
+    font-size: 14px;
+    line-height: 1.8;
+    text-align: left;
+}
+
+.completion-message p {
+    margin: 12px 0;
+}
+
+.completion-message p:first-child {
+    font-size: 16px;
+    margin-top: 0;
+}
+
+/* Resources Section */
+.resources-section {
+    margin-top: 30px;
+}
+
+.resources-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-bottom: 2px solid #0f0;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+/* Tabs Container */
+.tabs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.tab-button {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 15px;
+    background-color: #000;
+    border: 2px solid #0f0;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+}
+
+.tab-button:hover {
+    background-color: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+}
+
+.tab-button.active {
+    background-color: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    border: 2px solid #0f0;
+    padding: 20px;
+    background-color: rgba(0, 255, 0, 0.05);
+    animation: fadeIn 0.5s ease-in;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.resource-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    border-bottom: 2px solid #0f0;
+    padding-bottom: 10px;
+}
+
+.resource-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.resource-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border: 1px solid #0f0;
+    background-color: rgba(0, 255, 0, 0.03);
+    color: #0f0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 13px;
+}
+
+.resource-link:hover {
+    background-color: rgba(0, 255, 0, 0.15);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    transform: translateX(5px);
+}
+
+.resource-name {
+    flex: 1;
+    text-align: left;
+    word-break: break-word;
+}
+
+.resource-icon {
+    margin-left: 10px;
+    color: #0f0;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
 /* Station Page */
 .station-page {
     animation: fadeIn 0.8s ease-in;

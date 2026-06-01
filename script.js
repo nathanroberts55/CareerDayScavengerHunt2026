@@ -70,21 +70,39 @@ let verifiedPreviousAnswer = false;
 
 // Initialize App
 window.addEventListener('load', () => {
-	const urlParams = new URLSearchParams(window.location.search);
-	const stationId = urlParams.get('id');
-
-	if (stationId) {
-		loadStation(stationId);
-	} else {
-		showLandingPage();
-	}
+	// Always show the completion message (landing page) with resources
+	showLandingPage();
 });
 
-// Show Landing Page
+// Show Landing Page (Completion Message)
 function showLandingPage() {
 	document.getElementById('landingPage').style.display = 'block';
 	document.getElementById('stationPage').style.display = 'none';
-	document.getElementById('header').textContent = 'SCAVENGER HUNT TERMINAL';
+	document.getElementById('header').textContent = 'CAREER DAY 2026';
+}
+
+// Switch Tab Function
+function switchTab(tabName) {
+	// Hide all tab contents
+	const tabContents = document.querySelectorAll('.tab-content');
+	tabContents.forEach((tab) => {
+		tab.classList.remove('active');
+	});
+
+	// Remove active class from all tab buttons
+	const tabButtons = document.querySelectorAll('.tab-button');
+	tabButtons.forEach((button) => {
+		button.classList.remove('active');
+	});
+
+	// Show selected tab content
+	const selectedTab = document.getElementById(tabName);
+	if (selectedTab) {
+		selectedTab.classList.add('active');
+	}
+
+	// Add active class to clicked button
+	event.target.classList.add('active');
 }
 
 // Load Station
@@ -310,7 +328,7 @@ function resetStation() {
 // Go Home
 function goHome() {
 	verifiedPreviousAnswer = false;
-	window.location.href = '?';
+	window.location.href = window.location.pathname;
 }
 
 // Prevent form submission on Enter in input

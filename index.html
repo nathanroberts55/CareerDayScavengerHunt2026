@@ -14,28 +14,127 @@
 
         <!-- Landing Page -->
         <div id="landingPage" class="landing-page">
-            <h1>SYSTEM READY</h1>
-            <div class="system-status">
-                <div class="status-line">System Initialized</div>
-                <div class="status-line">User Role: ACTIVE</div>
-                <div class="status-line">Access Level: AUTHORIZED</div>
+            <h1>MISSIONS COMPLETE!</h1>
+            <div class="completion-message">
+                <p><strong>The bike has been claimed and the hunt is over.</strong></p>
+                <p>Thank you SO much for attending my Career Day presentation for Software Engineering.</p>
+                <p>You all were extremely respectful, kind, and incredibly intelligent. Like I said, there are many problems out there and you all showed that you are the <strong>future engineers that will solve them.</strong></p>
+                <p>Hopefully you were encouraged to start your journey in learning to code and make your own solutions. Many of you asked me where you can get started, so below I will list many FREE resources that you can use to learn to start coding and creating your own solutions TODAY!</p>
+                <p style="margin-top: 20px; font-weight: bold; color: #0f0; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);">Keep Building!</p>
+                <p style="margin-top: 10px;">- Nate</p>
             </div>
-            <div class="instructions">
-                <div class="instructions-title">MISSION BRIEFING</div>
-                <div class="instruction-item">Physical QR codes are posted at 6 hidden locations around the OUTSIDE of
-                    the school</div>
-                <div class="instruction-item">Use your phone's camera app to scan each QR code</div>
-                <div class="instruction-item">Answer trivia questions to unlock next locations</div>
-                <div class="instruction-item">Each location requires the answer from the PREVIOUS location</div>
-                <div class="instruction-item">Type answers exactly as shown - case doesn't matter</div>
-                <div class="instruction-item">Collect all hints to unlock the location of where the bike's lock keys are
-                    hidden</div>
-                <div class="instruction-item">When found, keep the bike AND the lock. Good Luck!</div>
-                <div class="instruction-item first-instruction">The first clue can be found on a stop sign in the
-                    parking lot near the gym</div>
-            </div>
-            <div class="qr-instruction">
-                📱 SCAN A QR CODE TO PLAY
+
+            <div class="resources-section">
+                <div class="resources-title">LEARNING RESOURCES</div>
+                
+                <div class="tabs-container">
+                    <button class="tab-button active" onclick="switchTab('programming')">Programming Basics</button>
+                    <button class="tab-button" onclick="switchTab('websites')">Making Websites</button>
+                    <button class="tab-button" onclick="switchTab('games')">Video Games</button>
+                    <button class="tab-button" onclick="switchTab('robotics')">Robotics</button>
+                    <button class="tab-button" onclick="switchTab('cybersecurity')">Cybersecurity</button>
+                    <button class="tab-button" onclick="switchTab('data')">Data Analysis</button>
+                </div>
+
+                <div id="programming" class="tab-content active">
+                    <div class="resource-header">Programming Basics</div>
+                    <div class="resource-list">
+                        <a href="https://www.freecodecamp.org/learn/python-v9/" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Python</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.freecodecamp.org/learn/foundational-c-sharp-with-microsoft/" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Foundational C# with Microsoft</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.codecademy.com/learn/learn-c-sharp" target="_blank" class="resource-link">
+                            <span class="resource-name">Codecademy | Free Course Learn C#</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.codecademy.com/learn/learn-java" target="_blank" class="resource-link">
+                            <span class="resource-name">Codecademy | Free Course Learn Java</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="websites" class="tab-content">
+                    <div class="resource-header">Making Websites - HTML/CSS/JavaScript/React</div>
+                    <div class="resource-list">
+                        <a href="https://www.freecodecamp.org/learn/responsive-web-design-v9/" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Responsive Web Design Interactive Course</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.freecodecamp.org/learn/javascript-v9/" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | JavaScript</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.freecodecamp.org/learn/front-end-development-libraries-v9/" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Front-End Development Libraries</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="games" class="tab-content">
+                    <div class="resource-header">Video Game Development</div>
+                    <div class="resource-list">
+                        <a href="https://www.youtube.com/watch?v=XGf2GcyHPhc" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Learn Python by Building Five Games - Full Course</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=FfWpgLFMI7w" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Pygame Tutorial for Beginners - Python Game Development Course</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=gB1F9G0JXOo" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Learn Unity - Beginner's Game Development Tutorial</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="robotics" class="tab-content">
+                    <div class="resource-header">Robotics</div>
+                    <div class="resource-list">
+                        <a href="https://www.youtube.com/watch?v=k-yDYgc8AmU" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Learn Drone Programming with Python</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=zJ-LqeX_fLU" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Arduino Course for Beginners</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="cybersecurity" class="tab-content">
+                    <div class="resource-header">Cybersecurity</div>
+                    <div class="resource-list">
+                        <a href="https://www.codecademy.com/learn/introduction-to-cybersecurity" target="_blank" class="resource-link">
+                            <span class="resource-name">Codecademy | Free Course Introduction to Cybersecurity</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://www.codecademy.com/learn/introduction-to-personal-digital-security" target="_blank" class="resource-link">
+                            <span class="resource-name">Codecademy | Free Course Introduction to Personal Digital Security</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                        <a href="https://tryhackme.com/path/outline/cybersecurity101" target="_blank" class="resource-link">
+                            <span class="resource-name">TryHackMe | Cyber Security 101</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="data" class="tab-content">
+                    <div class="resource-header">Data Analysis</div>
+                    <div class="resource-list">
+                        <a href="https://www.youtube.com/watch?v=PSNXoAs2FtQ" target="_blank" class="resource-link">
+                            <span class="resource-name">Free Code Camp | Data Analyst Bootcamp for Beginners</span>
+                            <span class="resource-icon">↗</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
