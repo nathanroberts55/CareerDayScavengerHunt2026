@@ -23,12 +23,12 @@ const CONFIG = {
 		},
 		{
 			id: 'p2n8q',
-			title: 'Gaming Station',
+			title: 'Hardware Station',
 			context:
 				'In 2001, Microsoft released a powerful gaming console with a famous green-and-black logo.',
 			question: "What is the name of Microsoft's gaming system?",
 			answerBase64: 'WEJveA==', // "Xbox" in Base64
-			hint: 'Access Granted. Look high and find the next clue on a sign that tells you that you can ONLY go left in the parking lot.',
+			hint: 'Access Granted. Look high and find the next clue on a sign that shows you that you can ONLY go left in the parking lot.',
 		},
 		{
 			id: 'j6x3l',
@@ -53,7 +53,7 @@ const CONFIG = {
 			title: 'Gaming Station',
 			context:
 				'In 2014, Microsoft bought the company that made a world-famous game made of blocks.',
-			question: 'What is the name of this "blocky" sandbox game?',
+			question: 'What is the name of this "blocky" video game?',
 			answerBase64: 'TWluZWNyYWZ0', // "Minecraft" in Base64
 			hint: 'Access Granted. You have solved the last puzzle! Go to the main entrance, and under the buildings numbers leave no "stone" unturned to find where the keys are hidden.',
 		},
